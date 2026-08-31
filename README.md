@@ -26,6 +26,7 @@
 
 ![Mocapy Design](./designs/モカピー２.png)
 
+© 2026 Idelity
 ---
 
 ## 🎨 展開予定の商品アイデア（3Dプリントグッズ）
