@@ -23,7 +23,7 @@ git init
 GitHub上で作成したリポジトリのURLを登録します。
 ※「あなたのユーザー名」の部分は、ご自身のGitHubアカウント名に書き換えてください。
 ```bash
-git remote add origin https://github.com
+git remote add origin https://github.com/Idelity/Mocapy/
 ```
 
 ### 4. GitHubから最新データをダウンロードする（同期）
