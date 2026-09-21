@@ -81,9 +81,8 @@
 ```text
 Mocapy/
 ├── README.md        # プロジェクトの概要（本ファイル）
-├── designs/         # 原画、ラフイラスト（PNG/JPG）
-├── vectors/         # 3D化に必要なベクターデータ（SVG）
-└── 3d_models/       # 3Dプリンター用データ（STL/OBJ）
+├── caｄ/.           # pythonスクリプト＆STL
+└── designs/         # 原画、ラフイラスト（PNG/JPG）
 ```
 
 ---
