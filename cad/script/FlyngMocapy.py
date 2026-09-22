@@ -200,7 +200,7 @@ antennas.translate(App.Base.Vector(3.0, 0.0, head_r - 3.2))
 key_hole = Part.makeCylinder(hole_r, 30.0)
 key_hole.translate(App.Base.Vector(3.0, -15.0, head_r + 0.2))
 antennas_with_hole = antennas.cut(key_hole)
-
+/Users/irobapp-dev01/Documents/Mocapy/cad/script/FlyngMocapy2P.py
 # --- 10. すべてのパーツを合体 ---
 final_mocapy = head_combined.fuse(body)
 final_mocapy = final_mocapy.fuse(arm_l)
