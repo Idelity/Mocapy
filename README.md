@@ -1,4 +1,4 @@
-# 🐾 Mocapy - Original Character Project
+# 🐾 Mocapy（モカピー） - Original Character Project
 
 3Dプリンターでのビジネス展開を目指す、オリジナルキャラクター「Mocapy（モカピー）」の公式開発リポジトリです。
 キャラクターイラストの管理から、3Dモデリング、試作・商品化までのすべてのプロセスをここで記録・管理します。
