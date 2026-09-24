@@ -6,77 +6,67 @@ def create_perfect_capuchi_ideal_face_returned():
     # 1. 新規ドキュメントの作成
     doc = App.newDocument("Mocapy_Capuchi")
     
+    # 10倍スケール用のマトリクス
+    matrix_scale10 = App.Matrix()
+    matrix_scale10.scale(10.0)
+    
     # ==========================================
-    # 🌟 卵形のボディ（長さ 3.0）
+    # 🌟 各パーツの作成と個別の10倍スケール処理
     # ==========================================
+    
+    # 卵形のボディ
     body_sphere = Part.makeSphere(1.0)
     matrix_body = App.Matrix()
     matrix_body.scale(App.Vector(1.2, 1.2, 1.5))
-    capuchi_body = body_sphere.transformGeometry(matrix_body).translate(App.Vector(0, 0, 2.3))
+    capuchi_body = body_sphere.transformGeometry(matrix_body).translate(App.Vector(0, 0, 2.3)).transformGeometry(matrix_scale10)
     
-    # ==========================================
-    # 🌟 【元通り】胴体に深く食い込ませたスリムな2本足
-    # 足先を広げず、直径4分の3（0.33mm）のままポツンと狭い間隔で立つ形に戻しました
-    # ==========================================
+    # 左足
     leg_L = Part.makeCylinder(0.33, 1.2, App.Vector(0.0, 0.45, 0.3), App.Vector(0.0, 0.0, 1.0))
     foot_L = Part.makeSphere(0.33).translate(App.Vector(0.0, 0.45, 0.3))
-    full_leg_L = leg_L.fuse(foot_L)
+    full_leg_L = leg_L.fuse(foot_L).transformGeometry(matrix_scale10)
     
+    # 右足
     leg_R = Part.makeCylinder(0.33, 1.2, App.Vector(0.0, -0.45, 0.3), App.Vector(0.0, 0.0, 1.0))
     foot_R = Part.makeSphere(0.33).translate(App.Vector(0.0, -0.45, 0.3))
-    full_leg_R = leg_R.fuse(foot_R)
-    legs = full_leg_L.fuse(full_leg_R)
+    full_leg_R = leg_R.fuse(foot_R).transformGeometry(matrix_scale10)
     
-    capuchi_raw = capuchi_body.fuse(legs).removeSplitter()
+    # 丸い顔
+    round_face = Part.makeSphere(1.1).translate(App.Vector(0.3, 0, 2.53)).transformGeometry(matrix_scale10)
     
-    # ==========================================
-    # 🌟 ほんの少し上に引き上げた、絶妙な高さの「丸い顔」（Z=2.53）
-    # ==========================================
-    round_face = Part.makeSphere(1.1).translate(App.Vector(0.3, 0, 2.53))
-    capuchi_raw = capuchi_raw.fuse(round_face).removeSplitter()
-    
-    # ==========================================
-    # 🌟 大きめの「丸い肩」と、そこから垂れる細短い腕
-    # ==========================================
+    # 左腕と左肩
     shoulder_L = Part.makeSphere(0.35).translate(App.Vector(0.0, 1.2, 1.8))
     arm_L = Part.makeCylinder(0.18, 1.1, App.Vector(0.0, 1.2, 1.8), App.Vector(0.0, 0.0, -1.0))
     hand_L = Part.makeSphere(0.18).translate(App.Vector(0.0, 1.2, 0.7))
-    full_arm_L = shoulder_L.fuse(arm_L).fuse(hand_L)
+    full_arm_L = shoulder_L.fuse(arm_L).fuse(hand_L).transformGeometry(matrix_scale10)
     
+    # 右腕と右肩
     shoulder_R = Part.makeSphere(0.35).translate(App.Vector(0.0, -1.2, 1.8))
     arm_R = Part.makeCylinder(0.18, 1.1, App.Vector(0.0, -1.2, 1.8), App.Vector(0.0, 0.0, -1.0))
     hand_R = Part.makeSphere(0.18).translate(App.Vector(0.0, -1.2, 0.7))
-    full_arm_R = shoulder_R.fuse(arm_R).fuse(hand_R)
+    full_arm_R = shoulder_R.fuse(arm_R).fuse(hand_R).transformGeometry(matrix_scale10)
     
-    capuchi_raw = capuchi_raw.fuse(full_arm_L).fuse(full_arm_R).removeSplitter()
+    # 顔のパーツ（点目 ＆ ラウンドへの字口）
+    eye_L = Part.makeSphere(0.13).translate(App.Vector(1.3, 0.35, 2.73)).transformGeometry(matrix_scale10)
+    eye_R = Part.makeSphere(0.13).translate(App.Vector(1.3, -0.35, 2.73)).transformGeometry(matrix_scale10)
     
-    # ==========================================
-    # 🌟 顔のパーツ（点目 ＆ ラウンドへの字口）
-    # ==========================================
-    eye_L = Part.makeSphere(0.13).translate(App.Vector(1.3, 0.35, 2.73))
-    eye_R = Part.makeSphere(0.13).translate(App.Vector(1.3, -0.35, 2.73))
-    
-    # ラウンドへの字口
     mouth_torus = Part.makeTorus(0.22, 0.05, App.Vector(1.33, 0.0, 2.38), App.Vector(1.0, 0.0, 0.0))
     mouth_cutter = Part.makeBox(2.0, 2.0, 2.0, App.Vector(0.0, -1.0, 2.38))
-    round_mouth = mouth_torus.cut(mouth_cutter)
-    
-    # 顔の表面に彫り込む
-    capuchi_raw = capuchi_raw.cut(eye_L).cut(eye_R).cut(round_mouth)
+    round_mouth = mouth_torus.cut(mouth_cutter).transformGeometry(matrix_scale10)
     
     # ==========================================
-    # 🌟 【変更点】全体を10倍にスケールアップ
+    # 🌟 順序を守って安全に結合・カット
     # ==========================================
-    matrix_scale10 = App.Matrix()
-    matrix_scale10.scale(10.0)
-    capuchi_scaled = capuchi_raw.transformGeometry(matrix_scale10)
+    # 1. まずベースとなる体と頭、手足をすべて合体させる
+    capuchi_raw = capuchi_body.fuse(full_leg_L).fuse(full_leg_R).fuse(round_face).fuse(full_arm_L).fuse(full_arm_R).removeSplitter()
+    
+    # 2. 合体し終わった頑丈な体に、顔の彫り込みを入れる
+    capuchi_raw = capuchi_raw.cut(eye_L).cut(eye_R).cut(round_mouth).removeSplitter()
     
     # ==========================================
-    # 5. 3Dプリント安定用の底面フラットカット（10倍サイズに合わせてカッターも拡大）
+    # 5. 3Dプリント安定用の底面フラットカット
     # ==========================================
-    # 元のカット位置 0.02 も 10倍の 0.2 に調整しています
     flat_cutter = Part.makeBox(300.0, 300.0, 50.0, App.Vector(-150.0, -150.0, -50.0 + 0.2))
-    final_capuchi = capuchi_scaled.cut(flat_cutter).removeSplitter()
+    final_capuchi = capuchi_raw.cut(flat_cutter).removeSplitter()
     
     capuchi_object = doc.addObject("Part::Feature", "Capuchi")
     capuchi_object.Shape = final_capuchi
@@ -94,4 +84,3 @@ def create_perfect_capuchi_ideal_face_returned():
 
 # スクリプトの実行
 create_perfect_capuchi_ideal_face_returned()
-
