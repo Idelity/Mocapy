@@ -65,10 +65,18 @@ def create_perfect_capuchi_ideal_face_returned():
     capuchi_raw = capuchi_raw.cut(eye_L).cut(eye_R).cut(round_mouth)
     
     # ==========================================
-    # 5. 3Dプリント安定用の底面フラットカット
+    # 🌟 【変更点】全体を10倍にスケールアップ
     # ==========================================
-    flat_cutter = Part.makeBox(30.0, 30.0, 5.0, App.Vector(-15.0, -15.0, -5.0 + 0.02))
-    final_capuchi = capuchi_raw.cut(flat_cutter).removeSplitter()
+    matrix_scale10 = App.Matrix()
+    matrix_scale10.scale(10.0)
+    capuchi_scaled = capuchi_raw.transformGeometry(matrix_scale10)
+    
+    # ==========================================
+    # 5. 3Dプリント安定用の底面フラットカット（10倍サイズに合わせてカッターも拡大）
+    # ==========================================
+    # 元のカット位置 0.02 も 10倍の 0.2 に調整しています
+    flat_cutter = Part.makeBox(300.0, 300.0, 50.0, App.Vector(-150.0, -150.0, -50.0 + 0.2))
+    final_capuchi = capuchi_scaled.cut(flat_cutter).removeSplitter()
     
     capuchi_object = doc.addObject("Part::Feature", "Capuchi")
     capuchi_object.Shape = final_capuchi
@@ -86,3 +94,4 @@ def create_perfect_capuchi_ideal_face_returned():
 
 # スクリプトの実行
 create_perfect_capuchi_ideal_face_returned()
+
