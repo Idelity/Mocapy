@@ -125,3 +125,4 @@ Mocapy/
 - [ ] 3. 3Dモデルのクリンアップ・調整（Tinkercad等で印刷用底面の作成）
 - [ ] 4. 試作プリントと素材（PLA/PETG等）の選定
 - [ ] 5. フリマアプリ（メルカリ・minne等）でのテスト販売開始
+- [ ] https://potofu.me/mocapy
