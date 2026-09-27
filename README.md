@@ -130,7 +130,7 @@ Mocapy/
 
 ## 利用規約 / License
 
-[![License: CC BY--NC 4.0](https://shields.io)](https://creativecommons.org)
+[![License: CC BY--NC_4.0](https://shields.io)](https://creativecommons.org)
 
 本リポジトリで公開しているSTLファイル（3Dデータ）およびそれを3Dプリンターで出力した造形物は、国際ライセンスである **[CC BY-NC 4.0（表示 - 非営利）](https://creativecommons.org)** に基づき、個人の趣味の範囲でのみご利用いただけます。
 
