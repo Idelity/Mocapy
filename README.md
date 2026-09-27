@@ -126,6 +126,7 @@ Mocapy/
 - [ ] 4. 試作プリントと素材（PLA/PETG等）の選定→済
 - [ ] 5. フリマアプリ（メルカリ・minne等）でのテスト販売開始
 - [ ] 6. ポトフを使ってみる https://potofu.me/mocapy
+- [ ] 7. Xで発信してみる https://x.com/mocapyworld
 
 
 ## 利用規約 / License
