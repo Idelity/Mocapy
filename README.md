@@ -125,4 +125,26 @@ Mocapy/
 - [ ] 3. 3Dモデルのクリンアップ・調整→済
 - [ ] 4. 試作プリントと素材（PLA/PETG等）の選定→済
 - [ ] 5. フリマアプリ（メルカリ・minne等）でのテスト販売開始
-- [ ] 6.　ポトフを使ってみる https://potofu.me/mocapy
+- [ ] 6. ポトフを使ってみる https://potofu.me/mocapy
+
+
+## 利用規約 / License
+
+本リポジトリで公開しているSTLファイル（3Dデータ）およびそれを3Dプリンターで出力した造形物は、個人の趣味の範囲でのみご利用いただけます。
+
+* 🟢 **許可されること**: 個人利用目的での3Dプリント、およびそれに伴うデータの個人的な改変。
+* ❌ **禁止されること**: 
+  * データの二次配布や転載（改変したものを含む）。
+  * 3Dデータ自体の販売、オークションへの出品。
+  * 出力した造形物（3Dプリント品）の販売、フリマアプリへの出品、商用利用。
+
+---
+
+The STL files and 3D models provided in this repository are for **personal, non-commercial use only**.
+
+* 🟢 **Allowed**: 3D printing for personal enjoyment and personal modification of the data.
+* ❌ **Prohibited**:
+  * Redistribution or re-uploading of the data (including modified versions).
+  * Selling or commercial distribution of the digital files.
+  * Selling physical 3D prints or using them for commercial purposes.
+
