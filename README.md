@@ -130,8 +130,6 @@ Mocapy/
 
 ## 利用規約 / License
 
-<img src="https://creativecommons.org" alt="CC BY-NC 4.0" width="88" height="31">
-
 本リポジトリで公開しているSTLファイル（3Dデータ）およびそれを3Dプリンターで出力した造形物は、国際ライセンスである **[CC BY-NC 4.0（表示 - 非営利）](https://creativecommons.org)** に基づき、個人の趣味の範囲でのみご利用いただけます。
 
 * 🟢 **許可されること**: 個人利用目的での3Dプリント、およびそれに伴うデータの個人的な改変。
