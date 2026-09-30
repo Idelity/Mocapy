@@ -3,11 +3,11 @@ import Part
 import math
 import os
 
-def create_perfect_capuchi_ideal_face_cleaned():
+def create_perfect_capuchi_ideal_face_returned_split():
     # 新しいタブを作らず、今開いている画面を上書きリセットする
     doc = App.activeDocument()
     if not doc:
-        doc = App.newDocument("Mocapy_Capuchi")
+        doc = App.newDocument("Mocapy_Capuchi_Split")
     else:
         # 画面に古いカプチが残っていたら一旦すべて削除して綺麗にする
         for obj in doc.Objects:
@@ -53,7 +53,7 @@ def create_perfect_capuchi_ideal_face_cleaned():
     face_cutter_cyl = Part.makeCylinder(1.15, 2.0, App.Vector(0.35, 0.0, 2.53), App.Vector(1.0, 0.0, 0.0))
     groove_cutter = face_cutter_cyl.transformGeometry(matrix_scale10)
 
-    # Pure U-hand (🌟元の大きくて綺麗な横向きU字おててに戻しました)
+    # Pure U-hand (元の大きくて綺麗な横向きU字おてて)
     def make_pure_u_hand():
         r_outer = 0.38
         r_inner = 0.18
@@ -82,20 +82,19 @@ def create_perfect_capuchi_ideal_face_cleaned():
     y_left_arm  = 1.2
     y_right_arm = -1.2
 
-    # 🌟【クリーニング箇所】不必要な .transformGeometry() の例外処理によるバグ記述を排除しました
-    # 左の肩・長さ1.00の腕・高さ0.55の横向きU字手
+    # クリーニング済みのシンプルな左の肩・腕・おてての結合
     shoulder_L = Part.makeSphere(0.35).translate(App.Vector(0.0, y_left_arm, 1.8))
     arm_L = Part.makeCylinder(0.18, 1.00, App.Vector(0.0, y_left_arm, 1.8), App.Vector(0.0, 0.0, -1.0))
     u_hand_L = make_pure_u_hand().translate(App.Vector(0.0, y_left_arm, 0.55))
     full_arm_L = shoulder_L.fuse(arm_L).fuse(u_hand_L).transformGeometry(matrix_scale10)
     
-    # 右の肩・長さ1.00の腕・高さ0.55の横向きU字手
+    # クリーニング済みのシンプルな右の肩・腕・おてての結合
     shoulder_R = Part.makeSphere(0.35).translate(App.Vector(0.0, y_right_arm, 1.8))
     arm_R = Part.makeCylinder(0.18, 1.00, App.Vector(0.0, y_right_arm, 1.8), App.Vector(0.0, 0.0, -1.0))
     u_hand_R = make_pure_u_hand().translate(App.Vector(0.0, y_right_arm, 0.55))
     full_arm_R = shoulder_R.fuse(arm_R).fuse(u_hand_R).transformGeometry(matrix_scale10)
     
-    # 🌟【キープ】ぷっくり点目
+    # ぷっくり点目
     eye_radius = 0.13 * 1.2
     eye_L = Part.makeSphere(eye_radius).translate(App.Vector(1.17, 0.35, 2.73)).transformGeometry(matrix_scale10)
     eye_R = Part.makeSphere(eye_radius).translate(App.Vector(1.17, -0.35, 2.73)).transformGeometry(matrix_scale10)
@@ -106,44 +105,67 @@ def create_perfect_capuchi_ideal_face_cleaned():
     round_mouth = mouth_torus.cut(mouth_cutter).transformGeometry(matrix_scale10)
     
     # ==========================================
-    # 結合とカット
+    # 結合とカット（全身のソリッドを確定）
     # ==========================================
     body_and_limbs = capuchi_body.fuse(full_leg_L).fuse(full_leg_R).fuse(full_arm_L).fuse(full_arm_R).removeSplitter()
     body_grooved = body_and_limbs.cut(groove_cutter).removeSplitter()
     capuchi_raw = body_grooved.fuse(round_face).fuse(eye_L).fuse(eye_R).removeSplitter()
     capuchi_raw = capuchi_raw.cut(round_mouth).removeSplitter()
     
-    # ==========================================
-    # 5. 3Dプリント安定用の底面フラットカット
-    # ==========================================
+    # 3Dプリント安定用の底面フラットカット
     flat_cutter = Part.makeBox(300.0, 300.0, 50.0, App.Vector(-150.0, -150.0, -50.0 + 0.2))
-    final_capuchi = capuchi_raw.cut(flat_cutter).removeSplitter()
+    full_capuchi = capuchi_raw.cut(flat_cutter).removeSplitter()
     
-    capuchi_object = doc.addObject("Part::Feature", "Capuchi")
-    capuchi_object.Shape = final_capuchi
+    # ==========================================
+    # 2. 🌟【修正】足が細くならないよう、体の厚みの中心（X = 0.0）で前後に2分割
+    # ==========================================
+    # 1層目空エラー対策として0.01mm重ねる
+    slice_box_front = Part.makeBox(200.0, 200.0, 200.0)
+    slice_box_front.translate(App.Base.Vector(0.0 - 0.01, -100.0, -50.0))
+    
+    slice_box_back = Part.makeBox(200.0, 200.0, 200.0)
+    slice_box_back.translate(App.Base.Vector(-200.0 + 0.01, -100.0, -50.0))
+    
+    # 共通部分（.common()）を用いて前面と後面を抽出
+    front_part = full_capuchi.common(slice_box_front)
+    back_part = full_capuchi.common(slice_box_back)
+    
+    # 印刷時に並べて置けるよう、後面パーツを横（Y方向）にずらす
+    back_part.translate(App.Base.Vector(0.0, 45.0, 0.0))
+    
+    # ==========================================
+    # 3. FreeCADの画面へ別オブジェクトとして出力
+    # ==========================================
+    obj_front = doc.addObject("Part::Feature", "Capuchi_FRONT")
+    obj_front.Shape = front_part
+    
+    obj_back = doc.addObject("Part::Feature", "Capuchi_BACK")
+    obj_back.Shape = back_part
     
     # ==========================================
     # デスクトップへのSTL自動エクスポート機能
     # ==========================================
     try:
         desktop_path = os.path.expanduser("~/Desktop")
-        file_path = os.path.join(desktop_path, "Capuchi_10x.stl")
-        Part.export([capuchi_object], file_path)
-        print(f"🌟 デスクトップにSTLファイルを保存しました: {file_path}")
+        Part.export([obj_front], os.path.join(desktop_path, "Capuchi_FRONT.stl"))
+        Part.export([obj_back], os.path.join(desktop_path, "Capuchi_BACK.stl"))
+        print("🌟 足の肉厚をしっかり残した2分割STLファイルを保存しました！")
     except Exception as e:
         print(f"⚠️ STL保存中にエラーが発生しました: {str(e)}")
 
-    # 6. 画面の再計算と見栄えの調整
+    # 4. 画面の再計算と見栄えの調整
     doc.recompute()
     if App.GuiUp:
         import FreeCADGui as Gui
         Gui.ActiveDocument.ActiveView.viewAxometric()
         Gui.ActiveDocument.ActiveView.fitAll()
         
-        gui_obj = Gui.getDocument(doc.Name).getObject(capuchi_object.Name)
-        gui_obj.ShapeColor = (0.55, 0.4, 0.3)
-        gui_obj.DisplayMode = "Shaded"
-        gui_obj.Deviation = 0.005
+        gui_front = Gui.getDocument(doc.Name).getObject(obj_front.Name)
+        gui_back = Gui.getDocument(doc.Name).getObject(obj_back.Name)
+        for gui_obj in [gui_front, gui_back]:
+            gui_obj.ShapeColor = (0.55, 0.4, 0.3)
+            gui_obj.DisplayMode = "Shaded"
+            gui_obj.Deviation = 0.005
 
 # スクリプトの実行
-create_perfect_capuchi_ideal_face_cleaned()
+create_perfect_capuchi_ideal_face_returned_split()
