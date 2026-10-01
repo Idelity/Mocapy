@@ -104,9 +104,23 @@
 
         /* --- 仲間紹介（図鑑風レイアウト） --- */
         .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+            display: flex;
+            gap: 20px;
+            padding: 10px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory; /* スクロールした時にカードがピタッと真ん中で止まる心地いい設定 */
+            -webkit-overflow-scrolling: touch; /* 指の動きになめらかに追従させる（iPhone用） */
+        }
+        /* スクロールバーの見た目をカフェ風に可愛く（お好みで） */
+        .grid-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .grid-container::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+        .grid-container::-webkit-scrollbar-track {
+            background: transparent;
         }
 
         .card {
@@ -116,8 +130,22 @@
             text-align: center;
             box-shadow: 0 4px 15px rgba(141, 110, 99, 0.05);
             border: 2px dashed #e8dfd1;
-        }
+            flex: 0 0 280px;           /* スマホでは横幅280pxに固定して横に並べる */
+            scroll-snap-align: center; /* スクロール時に画面中央にピタッと止まる */
 
+        }
+        /* --- 💻 パソコン画面用の切り替え（メディアクエリ） --- */
+        @media (min-width: 769px) {
+            .grid-container {
+                display: grid;         /* パソコンではGrid（格子状）に戻す */
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* 5個なら自動で1段に綺麗に収まります */
+                overflow-x: visible;   /* スクロールバーを消す */
+            }
+            .card {
+                flex: unset;           /* スマホ用の横幅固定を解除する */
+            }
+        }
+        
         .card img {
             width: 120px;
             height: 120px;
@@ -211,7 +239,7 @@
     <div class="container">
         <!-- 仲間紹介セクション -->
         <section id="friends">
-            <h2>キャラクター名鑑</h2>
+            <h2>キャラクター名鑑<br>（なかまたち）</h2>
             <div class="grid-container">
                 <div class="card">
                     <!-- src属性にお手持ちのキャラクター画像をあててください -->
@@ -222,11 +250,25 @@
                     <p>コーヒーの湯気から生まれた、カフェやデスクに出現する小さな温かい妖精です。 デスクワークで疲れた人のそばにそっと寄り添い、日常に小さな癒やしを届けます。</p>
                 </div>
                 <div class="card">
-                    <img src="images/No002-01.png" alt=" Lad-B（レドビー）">
+                    <img src="images/No002-02.png" alt=" Lad-B（レドビー）">
                     <h3>Lad-B（レドビー）</h3>
                     <p>登録番号： No.002</p>
                     <p>種族： 虫（インセクト）</p>
                     <p>「モカピー」の頭や背中に捕まって周りの様子を観察している。モカピーの危険を瞬時に察知し、モカピーにそれを伝達する頼もしい相棒。</p>
+                </div>
+                <div class="card">
+                    <img src="images/No003-01.png" alt=" Dangoloron（ダンゴロロン）">
+                    <h3>Dangoloron（ダンゴロロン）</h3>
+                    <p>登録番号： No.003</p>
+                    <p>種族： 虫（インセクト）</p>
+                    <p>「モカピーの背中が特等席！どこへでも一緒についていく、小さなちいさな冒険家。必殺技：ダンゴロロンアタック</p>
+                </div>
+                <div class="card">
+                    <img src="images/No004-01.png" alt=" Capuchi（カプッチ）">
+                    <h3>Capuchi（カプッチ）</h3>
+                    <p>登録番号： No.004</p>
+                    <p>種族： 妖精（フェアリー）</p>
+                    <p>カップ・カプセル・ハード・コート（防御力抜群の身体）。卵型ボディにだらりん両腕。ポツンと佇む、モカピー・ワールド一のマヌケな癒やし系。</p>
                 </div>
                 <div class="card">
                     <img src="images/No005-01.png" alt="Sugar Sugaro（シュガー・シュガロ）">
