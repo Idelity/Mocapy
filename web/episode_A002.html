@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>モカピーワールド</title>
+    <!-- ほのぼのした優しいフォントを読み込み -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Mochiy+Pop+One&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 基本設定（温かいカフェ風カラー） --- */
+        :root {
+            --bg-color: #fbf7f0;       /* 優しいミルク色 */
+            --main-color: #8d6e63;     /* カフェモカブラウン */
+            --accent-color: #e0a96d;   /* ぬくもりのある木漏れ日オレンジ */
+            --text-color: #5d4037;     /* 濃いめのコーヒーブラウン */
+            --card-bg: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('cafe.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* スクロールしても背景が動かないおしゃれな効果 */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Kiwi Maru', serif;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- ヘッダー（モカピーの世界観） --- */
+        header {
+            text-align: center;
+            padding: 60px 0 40px;
+            background: radial-gradient(circle, #fff7eb 0%, var(--bg-color) 70%);
+        }
+
+        header h1 {
+            font-family: 'Mochiy Pop One', sans-serif;
+            font-size: 2.5rem;
+            color: var(--main-color);
+            margin: 0 0 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            margin: 0;
+            color: var(--accent-color);
+        }
+
+        /* --- ナビゲーション --- */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        nav a {
+            color: var(--main-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--main-color);
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            background-color: var(--main-color);
+            color: #fff;
+        }
+
+        /* --- セクション共通 --- */
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-family: 'Mochiy Pop One', sans-serif;
+            font-size: 1.8rem;
+            text-align: center;
+            color: var(--main-color);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h2::after {
+            content: '☕';
+            display: block;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        /* --- 仲間紹介（図鑑風レイアウト） --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(141, 110, 99, 0.05);
+            border: 2px dashed #e8dfd1;
+        }
+
+        .card img {
+            width: 120px;
+            height: 120px;
+            background-color: #eee; /* 画像がない時用のグレー枠 */
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid var(--accent-color);
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            font-size: 1.3rem;
+        }
+
+        /* --- エピソード紹介（絵本風タイムライン） --- */
+        .episode-box {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(141, 110, 99, 0.05);
+        }
+
+        .episode-box h3 {
+            margin-top: 0;
+            color: var(--main-color);
+        }
+
+        /* --- WordPressブログへの大きな動線リンク --- */
+        .blog-banner {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
+            border: 2px solid var(--accent-color);
+        }
+
+        .blog-banner p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-blog {
+            display: inline-block;
+            background-color: var(--main-color);
+            color: #fff;
+            padding: 15px 40px;
+            font-family: 'Mochiy Pop One', sans-serif;
+            font-size: 1.2rem;
+            text-decoration: none;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(8d, 6e, 63, 0.3);
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .btn-blog:hover {
+            transform: translateY(-3px);
+            background-color: #70554c;
+        }
+
+        /* --- フッター --- */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            font-size: 0.9rem;
+            color: #9e9e9e;
+            border-top: 1px solid #e8dfd1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <h1>Mocapy（モカピー）ワールド</h1>
+            <p>〜 カフェの片隅に暮らす、のんびり妖精のまいにち 〜</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- エピソード紹介セクション -->
+        <section id="episodes">
+            <h2>妖精たちのエピソード</h2>
+            <div class="episode-box">
+                <h3>第2話：💻 カタカタ動く手元と、甘いおこぼれ</h3>
+                <p>カフェの窓際で、ノートPCを広げて真剣な面持ちで仕事をしているビジネスパーソン。</p>
+                <p>キーボードを叩く「カタカタカタ……」という小気味よい音が響く中、いつの間にかPCの画面のすぐ横に、モカピーがちょこんと座っていました。</p>
+
+                <p>モカピーは、高速で動く人間の手元を「じーっ」と見つめています。</p>
+                <p>首を少し傾げて、「何をしてるんだろう？」と不思議そうに観察しているような表情です。</p>
+
+                <p>手元をしばらく見つめていたかと思うと、今度は人間の顔を「じーっ」と見上げてきました。</p>
+
+                <p>（おや、この子は僕の仕事に興味があるのかな？ IT系エンジニアの妖精にでもなりたいのかい？）</p>
+
+                <p>人間は少し嬉しくなり、作業の手を止めて、モカピーに画面がよく見えるようにノートPCを少し傾けてあげました。</p>
+                <p>「ほら、これを作っているんだよ」</p>
+
+                <p>モカピーは、傾けられたPC画面を「じっ……」と見つめます。</p>
+                <p>理解しようと必死になっているかのような、とても真剣な眼差しです。</p>
+
+                <p>と、思った次の瞬間。</p>
+
+                <p>モカピーはふわーっと浮き上がり、PC画面を無視して、人間の顔を目がけて「ふわふわ」と飛び立ちました。</p>
+                <p>真っ直ぐに、どんどん距離を縮めて近づいてきます。</p>
+
+                <p>「えっ？ うおっ、何……！？」</p>
+
+                <p>予想外の急接近に、人間は思わずのけぞりそうになります。</p>
+                <p>目の前まで迫るコーヒー色のちいさな体。お互いの鼻先が触れ合いそうなほどの距離で、モカピーが空中にピタッと止まりました。</p>
+
+                <p>息を呑む人間。</p>
+                <p>次の瞬間、モカピーは素早い動きで、人間の頬のあたりを「パクリッ」とやりました。</p>
+
+                <p>「えっ……痛くない。……え？」</p>
+
+                <p>困惑する人間に、モカピーは満足げな顔でペロリと口元を拭う仕草を見せます。</p>
+
+                <p>実は、人間が仕事のお供に食べていた「シュガードーナツ」のクズが、タイピングする手元と、口元のファサッとしたあたりに、うっすらと付着していたのです。</p>
+                <p>モカピーがずっと熱視線を送っていたのは、人間の仕事でも、人間の顔でもなく、そこに輝く**「極上のドーナツのクズ」**だったのでした。</p>
+
+                <p>（仕事の邪魔をしに来たわけじゃなくて、ただの食いしん坊だったか……）</p>
+
+                <p>お腹がいっぱいになったのか、モカピーはそのままPCのキーボードの隅っこ（あまり使わない「Esc」キーのあたり）で丸くなり、スースーと寝息を立て始めました。</p>
+                <p>人間は苦笑いしながら、キーボードを叩く音を少しだけ静かにして、優しく仕事を再開するのでした。</p>
+            </div>
+        </section>
+
+        <!-- WordPressブログへのリンク（今回のキモになる部分） -->
+        <section id="blog">
+            <div class="blog-banner">
+                <h2>モカピーの気まぐれ日記</h2>
+                <p>もっと日常をのぞいてみませんか？</p><p>妖精たちが気まぐれに更新する、ほのぼのブログはこちらから！</p>
+                <!-- 先ほど決定したWordPressの設置URL（例: /mocapy/blog/）を指定します -->
+                <a href="https://idelity.co.jp/mocapy-blog/" class="btn-blog">ブログを見に行く 📝</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- フッター（会社名を表示してコーポレートとさりげなくリンク） -->
+    <footer>
+        <p>&copy; 2026 アイディリティー株式会社 / モカピーの部屋. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
