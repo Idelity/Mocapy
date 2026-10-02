@@ -102,7 +102,8 @@
 ```text
 Mocapy/
 ├── README.md        # プロジェクトの概要（本ファイル）
-├── caｄ/.           # pythonスクリプト＆STL
+├── cad/.            # pythonスクリプト＆STL
+├── web/.            # ホームページ用ファイル
 └── designs/         # 原画、ラフイラスト（PNG/JPG）
 ```
 
