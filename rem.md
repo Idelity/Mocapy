@@ -60,16 +60,14 @@
 
 # 🔬 メモ
 
-・Meshy
-https://www.meshy.ai/ja
+| 名称 | URL | 備考 | 状態 |
+| :--- | :--- | :--- | :--- |
+| Meshy | https://www.meshy.ai/ja | --- | Googleアカウントで作成済み |
+| Tripo3D | https://www.tripo3d.ai/ja | --- | Googleアカウントで作成済み |
+| Canva（キャンバ） | https://www.canva.com/ja_jp/ | --- | Googleアカウントで作成済み |
+| SUZURI | https://suzuri.jp/lp/digitalproducts-entry | --- | Googleアカウントで作成済み |
+| J-PlatPat（特許情報プラットフォーム） | https://www.j-platpat.inpit.go.jp | --- | --- |
 
-・Tripo3D
-https://www.tripo3d.ai/ja
 
-・SUZURI
-https://suzuri.jp/lp/digitalproducts-entry
-
-・J-PlatPat（特許情報プラットフォーム）
-https://www.j-platpat.inpit.go.jp
 
 
