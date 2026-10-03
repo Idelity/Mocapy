@@ -58,3 +58,14 @@
 | タミヤ エナメル溶剤 X-20大びん　　　| 165-600円　| 40ml | エナメル |
 | GSIクレオス 水性クリアスプレー （光沢）　| 710円　| 88ml | 仕上げ |
 
+# 🔬 メモ
+
+・Meshy
+https://www.meshy.ai/ja
+・Tripo3D
+https://www.tripo3d.ai/ja
+・SUZURI
+https://suzuri.jp/lp/digitalproducts-entry
+・J-PlatPat（特許情報プラットフォーム）
+https://www.j-platpat.inpit.go.jp
+
