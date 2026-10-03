@@ -7,10 +7,10 @@ doc = App.newDocument("Mocapy_LP_King")
 # --- パラメータ設定 ---
 body_r = 12.0
 crown_h = 4.5
-staff_r = 1.0
+staff_r = 1.2          # 腕の連動用パラメータ
 arm_r = staff_r
-hand_r = 2.6          # 手のサイズは2.6
-staff_h = 16.0        # 【修正】長すぎた杖の長さを少し短縮 (18.0 -> 16.0)
+hand_r = 2.5
+staff_h = 15.0        # 杖の長さを15.0に維持
 lantern_r = 2.8
 
 cape_top_w = 8.0
@@ -28,16 +28,13 @@ mus_thick = 0.8
 eye_sphere_r = 2.5
 mouth_r = 2.2
 
-# 全体を地面(Z=0)に着地させるためのオフセット量
-z_offset = 9.2
-
-# --- カボチャ本体の作成 ---
 pumpkin_sphere = Part.makeSphere(body_r)
 
 mat = App.Matrix()
 mat.scale(1.45, 1.60, 1.15)
 pumpkin_base = pumpkin_sphere.transformGeometry(mat)
 
+# カボチャの底面カット位置は Z = -9.2
 bottom_cutter = Part.makeBox(50.0, 50.0, 10.0)
 bottom_cutter.translate(App.Base.Vector(-25.0, -25.0, -10.0 - (body_r - 2.8)))
 pumpkin_body = pumpkin_base.cut(bottom_cutter)
@@ -49,7 +46,7 @@ for angle in range(0, 360, 45):
     rib_base.translate(App.Base.Vector(math.cos(rad) * 2.8 * 1.45, math.sin(rad) * 2.8 * 1.60, 0))
     pumpkin_body = pumpkin_body.cut(pumpkin_base.cut(rib_base))
 
-# --- 顔パーツ（目・口・ひげ）の作成 ---
+# 左右の目のX座標（奥側 -11.0）
 raw_eye_l = Part.makeSphere(eye_sphere_r)
 raw_eye_l.translate(App.Base.Vector(-11.0, 4.8, 1.2))
 big_cutter_l = Part.makeSphere(40.0)
@@ -77,6 +74,10 @@ mouth_wire = Part.Wire([arc.toShape(), line.toShape()])
 mouth_face = Part.Face(mouth_wire)
 
 true_top_edge_mouth = mouth_face.extrude(App.Base.Vector(10.0, 0, 0))
+
+true_top_edge_mouth.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), 90.0)
+true_top_edge_mouth.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), 270.0)
+
 true_top_edge_mouth.translate(App.Base.Vector(-13.5, 0.0, -1.5))
 smile_mouth_cutter = true_top_edge_mouth
 
@@ -93,23 +94,25 @@ true_trapezoid_mustache.translate(App.Base.Vector(-12.2, 0.0, -0.7))
 
 body_face = pumpkin_body.cut(smile_mouth_cutter).fuse(combined_eyes).fuse(true_trapezoid_mustache)
 
-# --- 王冠の作成 ---
-crown_center = Part.makeCylinder(4.3, crown_h)
+# --- 王冠（トゲのはみ出しを修正） ---
+crown_center = Part.makeCylinder(5.0, crown_h)
 spikes = []
 for i in range(6):
     angle_deg = i * 60.0
     rad = math.radians(angle_deg)
     
-    spike_cone = Part.makeCone(1.4, 0.0, 3.2)
+    spike_cone = Part.makeCone(1.6, 0.0, 2.8)
     spike_cone.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), 15.0)
     
-    tip_sphere = Part.makeSphere(1.4)
-    tip_sphere.translate(App.Base.Vector(0.0, 0.0, 3.1))
+    tip_sphere = Part.makeSphere(1.2)
+    tip_sphere.translate(App.Base.Vector(0.0, 0.0, 2.7))
     tip_sphere.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), 15.0)
     
     safe_spike = spike_cone.fuse(tip_sphere)
     safe_spike.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,0,1), angle_deg)
-    safe_spike.translate(App.Base.Vector(math.cos(rad) * 2.5, math.sin(rad) * 2.5, crown_h - 0.5))
+    
+    # 【修正】配置半径を4.5から3.3に縮小し、土台のフチ（半径5.0）から絶対にはみ出ないように配置
+    safe_spike.translate(App.Base.Vector(math.cos(rad) * 3.3, math.sin(rad) * 3.3, crown_h - 0.5))
     spikes.append(safe_spike)
 
 real_crown = crown_center
@@ -119,7 +122,7 @@ for s in spikes:
 real_crown.translate(App.Base.Vector(0.0, 0.0, 8.6))
 body_crown = body_face.fuse(real_crown)
 
-# --- マントの作成 ---
+# --- マント（オリジナル完全復元版） ---
 p1 = App.Base.Vector(0, -cape_top_w / 2.0, cape_height)
 p2 = App.Base.Vector(0, cape_top_w / 2.0, cape_height)
 p3 = App.Base.Vector(0, cape_bottom_w / 2.0, 0)
@@ -144,10 +147,10 @@ r_cyl_r.translate(App.Base.Vector(-2.0, -cape_bottom_w/2.0 + round_r, round_r))
 corner_cutter_r = r_box_r.cut(r_cyl_r)
 
 round_trapezoid_cape = trapezoid_cape.cut(corner_cutter_l).cut(corner_cutter_r)
+
 round_trapezoid_cape.translate(App.Base.Vector(9.0, 0.0, -10.0))
 round_trapezoid_cape.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), -15.0)
 
-# エリの作成
 collar_sphere_base_l = Part.makeSphere(collar_sphere_r)
 collar_box_l = Part.makeBox(collar_sphere_r * 2.0, collar_sphere_r * 2.0, collar_sphere_r)
 collar_box_l.translate(App.Base.Vector(-collar_sphere_r, -collar_sphere_r, 0.0))
@@ -167,40 +170,48 @@ collar_half_r.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), -15.0)
 body_with_cape = body_crown.fuse(round_trapezoid_cape)
 body_cape_collar = body_with_cape.fuse(collar_half_l).fuse(collar_half_r)
 
-# --- 腕と手の作成 ---
-arm_l_cyl = Part.makeCylinder(arm_r, 16.4)
+arm_l_cyl = Part.makeCylinder(arm_r, 16.5)
 arm_l_cyl.rotate(App.Base.Vector(0,0,0), App.Base.Vector(1,0,0), 90.0)
 arm_l_cyl.translate(App.Base.Vector(-2.0, 1.0, -2.0))
 hand_l = Part.makeSphere(hand_r)
-hand_l.translate(App.Base.Vector(-2.0, 15.4, -2.0))
+hand_l.translate(App.Base.Vector(-2.0, 15.5, -2.0))
 arm_and_hand_l = arm_l_cyl.fuse(hand_l)
 
-arm_r_cyl = Part.makeCylinder(arm_r, 16.4)
+arm_r_cyl = Part.makeCylinder(arm_r, 16.5)
 arm_r_cyl.rotate(App.Base.Vector(0,0,0), App.Base.Vector(1,0,0), -90.0)
 arm_r_cyl.translate(App.Base.Vector(-2.0, -1.0, -2.0))
 hand_r = Part.makeSphere(hand_r)
-hand_r.translate(App.Base.Vector(-2.0, -15.4, -2.0)) # 右手の中心は Y=-15.4, Z=-2.0
+hand_r.translate(App.Base.Vector(-2.0, -15.5, -2.0))
 arm_and_hand_r = arm_r_cyl.fuse(hand_r)
 
-# --- 【修正】杖の作成と右手への完全密着調整 ---
-# 15度傾いたシリンダーが右手玉（Y=-15.4, Z=-2.0）の中心を通るように基準を再計算
-staff_stick = Part.makeCylinder(staff_r, staff_h)
-staff_stick.rotate(App.Base.Vector(0,0,0), App.Base.Vector(1,0,0), 15.0)
-# 右手の位置にフィットさせ、かつ最下点がカボチャ底面（Z=-9.2）に接地する位置にシフト
-staff_stick.translate(App.Base.Vector(-2.0, -15.4, -9.2))
+# --- 杖（5度傾き・スリムコーン） ---
+staff_angle_deg = 5.0
+staff_rad = math.radians(staff_angle_deg)
 
-# ランタン（球体）の位置も、新しくなった杖の先端（長さ16.0mm先）に連動して移動
+target_hand_z = -2.0
+pivot_z = -8.29
+delta_z = target_hand_z - pivot_z
+base_y = -15.5 + (delta_z * math.sin(staff_rad))
+
+unified_staff_cone = Part.makeCone(1.4, 1.0, 17.0)
+unified_staff_cone.rotate(App.Base.Vector(0,0,0), App.Base.Vector(1,0,0), staff_angle_deg)
+unified_staff_cone.translate(App.Base.Vector(-2.0, base_y, pivot_z))
+
 lantern = Part.makeSphere(lantern_r)
-lantern.translate(App.Base.Vector(-2.0, -15.4 - (staff_h * math.sin(math.radians(15.0))), (staff_h * math.cos(math.radians(15.0))) - 9.2))
-magic_staff = staff_stick.fuse(lantern)
+lantern.translate(App.Base.Vector(-2.0, base_y - (staff_h * math.sin(staff_rad)), staff_h * math.cos(staff_rad) + pivot_z))
 
-# --- 最終結合と配置の全体シフト ---
-full_lp_king = body_cape_collar.fuse(arm_and_hand_l).fuse(arm_and_hand_r).fuse(magic_staff)
+magic_staff = unified_staff_cone.fuse(lantern)
 
-# 全体をZ軸方向に持ち上げてベッド(Z=0)に完全着地
-full_lp_king.translate(App.Base.Vector(0.0, 0.0, z_offset))
+untrimmed_king = body_cape_collar.fuse(arm_and_hand_l).fuse(arm_and_hand_r).fuse(magic_staff)
 
-# FreeCADドキュメントへの反映
+# カボチャの底面(Z = -9.2)の位置で水平カット
+floor_cutter = Part.makeBox(100.0, 100.0, 20.0)
+floor_cutter.translate(App.Base.Vector(-50.0, -50.0, -20.0 - 9.2))
+full_lp_king = untrimmed_king.cut(floor_cutter)
+
+# 地面への接地移動
+full_lp_king.translate(App.Base.Vector(0.0, 0.0, 9.2))
+
 obj_full = doc.addObject("Part::Feature", "LP_King")
 obj_full.Shape = full_lp_king
 
@@ -209,6 +220,9 @@ doc.recompute()
 if App.GuiUp:
     try:
         App.Gui.ActiveDocument.ActiveView.viewReady()
-        App.Gui.SendMsgToActiveView("ViewFit")
-    except Exception:
+        App.Gui.ActiveDocument.ActiveView.fitAll()
+    except Exception as e:
         pass
+
+print("出力しました！")
+
