@@ -41,7 +41,7 @@
 
 ---
 
-![Lad-B Design](./designs/レドビー.png)
+![Lad-B Design](./web/images/episode_A002.png)
 
 © 2026 Idelity
 
@@ -75,7 +75,7 @@
 
 ---
 
-![Dangoloron Design](./designs/ダンゴロロン.png)
+![Dangoloron Design](./web/images/episode_A003.png)
 
 © 2026 Idelity
 
@@ -108,7 +108,7 @@
 
 ---
 
-![Capuchi Design](./designs/カプッチ.png)
+![Capuchi Design](./web/images/episode_A004.png)
 
 © 2026 Idelity
 
@@ -149,7 +149,7 @@
 
 ---
 
-![Sugar Sugaro Design](./designs/シュガロ.png)
+![Sugar Sugaro Design](./web/images/episode_A005.png)
 © 2026 Idelity
 
 ---
@@ -194,7 +194,7 @@
 
 ---
 
-LP-King Design
+![LP-King Design](./web/images/episode_A006.png)
 © 2026 Idelity
 
 ---
