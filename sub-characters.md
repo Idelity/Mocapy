@@ -41,7 +41,7 @@
 
 ---
 
-![Lad-B Design](./web/images/No002.png)
+![Lad-B Design](./web/images/No002-01.png)
 
 © 2026 Idelity
 
@@ -75,7 +75,7 @@
 
 ---
 
-![Dangoloron Design](./web/images/No003.png)
+![Dangoloron Design](./web/images/No003-01.png)
 
 © 2026 Idelity
 
@@ -108,7 +108,7 @@
 
 ---
 
-![Capuchi Design](./web/images/No004.png)
+![Capuchi Design](./web/images/No004-01.png)
 
 © 2026 Idelity
 
@@ -149,7 +149,7 @@
 
 ---
 
-![Sugar Sugaro Design](./web/images/No005.png)
+![Sugar Sugaro Design](./web/images/No005-01.png)
 © 2026 Idelity
 
 ---
@@ -194,7 +194,7 @@
 
 ---
 
-![LP-King Design](./web/images/No006.png)
+![LP-King Design](./web/images/No006-01.png)
 © 2026 Idelity
 
 ---
