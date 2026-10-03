@@ -62,10 +62,14 @@
 
 ・Meshy
 https://www.meshy.ai/ja
+
 ・Tripo3D
 https://www.tripo3d.ai/ja
+
 ・SUZURI
 https://suzuri.jp/lp/digitalproducts-entry
+
 ・J-PlatPat（特許情報プラットフォーム）
 https://www.j-platpat.inpit.go.jp
+
 
