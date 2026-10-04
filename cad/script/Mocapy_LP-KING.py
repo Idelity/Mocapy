@@ -170,31 +170,65 @@ collar_half_r.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), -15.0)
 body_with_cape = body_crown.fuse(round_trapezoid_cape)
 body_cape_collar = body_with_cape.fuse(collar_half_l).fuse(collar_half_r)
 
-# --- 【修正】両腕を少し伸ばし、手の位置を外側へシフト ---
-arm_len = 18.0  # 腕の長さを 16.5 から 18.0 へ延長
+# --- 腕と手（【修正】小さめの上下対称フラットカット ＋ 手首テーパー） ---
+arm_len = 18.0
 
+# 1. 左腕と左手
 arm_l_cyl = Part.makeCylinder(arm_r, arm_len)
 arm_l_cyl.rotate(App.Base.Vector(0,0,0), App.Base.Vector(1,0,0), 90.0)
 arm_l_cyl.translate(App.Base.Vector(-2.0, 1.0, -2.0))
-hand_l = Part.makeSphere(hand_r)
-hand_l.translate(App.Base.Vector(-2.0, arm_len - 1.0, -2.0)) # 延長に合わせて Y=17.0 へ配置
-arm_and_hand_l = arm_l_cyl.fuse(hand_l)
 
+hand_l_sphere = Part.makeSphere(hand_r)
+hand_l_sphere.translate(App.Base.Vector(-2.0, arm_len - 1.0, -2.0))
+
+# 手首のテーパー肉盛り
+wrist_taper_l = Part.makeCone(arm_r, hand_r * 0.8, 3.5)
+wrist_taper_l.rotate(App.Base.Vector(0,0,0), App.Base.Vector(1,0,0), 90.0)
+wrist_taper_l.translate(App.Base.Vector(-2.0, arm_len - 3.5, -2.0))
+
+raw_hand_l = arm_l_cyl.fuse(wrist_taper_l).fuse(hand_l_sphere)
+
+# 【修正】底面カットをマイルドに縮小（Zの切り落としを1.2から0.4mmへ引き下げてフラット面を小さく）
+flat_cutter_l_bot = Part.makeBox(10.0, 10.0, 2.0)
+flat_cutter_l_bot.translate(App.Base.Vector(-5.0, (arm_len - 1.0) - 5.0, -2.0 - hand_r - 1.6))
+# 【修正】上部（てっぺん）も同じ厚みで水平カットするカッターを追加
+flat_cutter_l_top = Part.makeBox(10.0, 10.0, 2.0)
+flat_cutter_l_top.translate(App.Base.Vector(-5.0, (arm_len - 1.0) - 5.0, -2.0 + hand_r - 0.4))
+
+arm_and_hand_l = raw_hand_l.cut(flat_cutter_l_bot).cut(flat_cutter_l_top)
+
+
+# 2. 右腕と右手
 arm_r_cyl = Part.makeCylinder(arm_r, arm_len)
 arm_r_cyl.rotate(App.Base.Vector(0,0,0), App.Base.Vector(1,0,0), -90.0)
 arm_r_cyl.translate(App.Base.Vector(-2.0, -1.0, -2.0))
-hand_r = Part.makeSphere(hand_r)
-hand_r.translate(App.Base.Vector(-2.0, -(arm_len - 1.0), -2.0)) # 延長に合わせて Y=-17.0 へ配置
-arm_and_hand_r = arm_r_cyl.fuse(hand_r)
 
-# --- 杖・ランタン（5度傾き、新しい手の位置 Y=-17.0 に合わせて自動同期） ---
+hand_r_sphere = Part.makeSphere(hand_r)
+hand_r_sphere.translate(App.Base.Vector(-2.0, -(arm_len - 1.0), -2.0))
+
+# 手首のテーパー肉盛り
+wrist_taper_r = Part.makeCone(arm_r, hand_r * 0.8, 3.5)
+wrist_taper_r.rotate(App.Base.Vector(0,0,0), App.Base.Vector(1,0,0), -90.0)
+wrist_taper_r.translate(App.Base.Vector(-2.0, -(arm_len - 3.5), -2.0))
+
+raw_hand_r = arm_r_cyl.fuse(wrist_taper_r).fuse(hand_r_sphere)
+
+# 【修正】右手の底面カットの縮小
+flat_cutter_r_bot = Part.makeBox(10.0, 10.0, 2.0)
+flat_cutter_r_bot.translate(App.Base.Vector(-5.0, -(arm_len - 1.0) - 5.0, -2.0 - hand_r - 1.6))
+# 【修正】右手の上面カットの追加
+flat_cutter_r_top = Part.makeBox(10.0, 10.0, 2.0)
+flat_cutter_r_top.translate(App.Base.Vector(-5.0, -(arm_len - 1.0) - 5.0, -2.0 + hand_r - 0.4))
+
+arm_and_hand_r = raw_hand_r.cut(flat_cutter_r_bot).cut(flat_cutter_r_top)
+
+# --- 杖・ランタン（大サイズ、5度傾き、新しい手の位置 Y=-17.0 に合わせて自動同期） ---
 staff_angle_deg = 5.0
 staff_rad = math.radians(staff_angle_deg)
 
 target_hand_z = -2.0
 pivot_z = -8.29
 delta_z = target_hand_z - pivot_z
-# 新しい右手位置（-17.0）を正確に貫通するようベースY座標を再計算
 base_y = -17.0 + (delta_z * math.sin(staff_rad))
 
 unified_staff_cone = Part.makeCone(1.8, 1.4, 17.0)
@@ -225,8 +259,4 @@ if App.GuiUp:
     try:
         App.Gui.ActiveDocument.ActiveView.viewReady()
         App.Gui.ActiveDocument.ActiveView.fitAll()
-    except Exception as e:
-        pass
-
-print("出力しました！")
 
