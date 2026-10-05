@@ -1,7 +1,7 @@
 # Mocapy World / モカピーワールド
 ## 〜 ちょっとこだわりが強くて個性豊かな、亜種たちのまいにち（Part 2） 〜
 
-[← 前の物語（第1話〜第10話）へ戻る](episodes.md) ｜ [グッズ（ショップ）を見る](https://suzuri.jp)
+[← 前の物語（第1話〜第10話）へ戻る](episodes.md) ｜ [グッズ（ショップ）を見る](https://suzuri.jp/Mocapy)
 
 ---
 
