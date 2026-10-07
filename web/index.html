@@ -209,7 +209,21 @@
             background-color: #70554c;
         }
 
-        /* --- フッター --- */
+        /* フッターナビ全体の配置 */
+        .footer-sns-navi {
+          text-align: center;
+          margin: 20px auto;
+          padding: 10px 0;
+          font-family: sans-serif;
+        }
+
+        /* 区切り文字（縦棒）のスタイル */
+        .navi-divider {
+          color: #ccc;
+          font-size: 14px;
+          margin: 0 5px;
+        }
+
         footer {
             text-align: center;
             padding: 40px 0;
@@ -344,11 +358,29 @@
                 <a href="https://idelity.co.jp/mocapy-blog/" class="btn-blog">ブログを見に行く 📝</a>
             </div>
         </section>
+        
+        
+     
+        <div class="footer-sns-navi">
+          <a href="https://x.com/mocapyworld" target="_blank" rel="noopener noreferrer" class="btn-blog">
+            <span class="navi-symbol">【公式】X Mocapy</span>
+          </a>
+          <span class="navi-divider">|</span>
+          <a href="https://github.com/idelity/mocapy" target="_blank" rel="noopener noreferrer" class="btn-blog">
+            <span class="navi-symbol">GitHub Mocapy</span>
+          </a>
+          <span class="navi-divider">|</span>
+          <a href="https://potofu.me/mocapy" target="_blank" rel="noopener noreferrer" class="btn-blog">
+            <span class="navi-symbol">Potofu (リンク集)</span>
+          </a>
+        </div>
+
+        
     </div>
 
     <!-- フッター（会社名を表示してコーポレートとさりげなくリンク） -->
     <footer>
-        <p>&copy; 2026 アイディリティー株式会社 / モカピーの部屋. All Rights Reserved.</p>
+        <p>&copy; 2026 アイディリティー株式会社 / Mocapy（モカピー）. All Rights Reserved.</p>
     </footer>
 
 </body>
