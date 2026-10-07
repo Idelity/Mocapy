@@ -3,7 +3,7 @@ import Part
 import math
 
 # 新しいドキュメントを作成
-doc = App.newDocument("Mocapy_GhostWithStand")
+doc = App.newDocument("Mocapy_Final_FaceSafe_Clean")
 
 # --- パラメータ設定 (単位: mm) ---
 head_r = 12.0       # 頭（頭巾）の半径
@@ -32,7 +32,7 @@ tongue_r = 1.5
 fang_r = 0.4
 fang_h = 1.2
 
-# --- 1. 頭巾とお顔の作成 ---
+# --- 1. 頭巾とお顔のベース作成 ---
 hood_base = Part.makeSphere(head_r)
 face_cutter = Part.makeSphere(face_r + 0.5)
 face_cutter.translate(App.Base.Vector(-4.5, 0, 0))
@@ -42,6 +42,7 @@ face = Part.makeSphere(face_r)
 face_center = App.Base.Vector(-2.0, 0, 0)
 face.translate(face_center)
 
+# 目
 eye_sphere_l = Part.makeSphere(eye_sphere_r)
 eye_sphere_r_part = Part.makeSphere(eye_sphere_r)
 eye_sphere_l.translate(App.Base.Vector(-10.2, 3.2, 1.8))
@@ -56,6 +57,7 @@ outer_face_sphere = Part.makeSphere(face_r + eye_thickness + 0.2)
 outer_face_sphere.translate(face_center)
 perfect_soft_eyes = cookie_back_cut.common(outer_face_sphere)
 
+# お口
 m_top = Part.makeSphere(mouth_radius)
 m_top.translate(App.Base.Vector(-11.5, 0, mouth_h_half))
 m_bottom = Part.makeSphere(mouth_radius)
@@ -68,6 +70,7 @@ mouth_capsule.translate(App.Base.Vector(0, 0, -4.7))
 
 face_with_mouth = face.cut(mouth_capsule)
 
+# ベロ・牙
 tongue = Part.makeSphere(tongue_r)
 tongue.translate(App.Base.Vector(-10.2, 0, -5.5))
 tongue_clean = tongue.common(mouth_capsule)
@@ -82,7 +85,18 @@ fang_r_part.translate(App.Base.Vector(-10.6, -0.8, -2.4))
 fangs = fang_l.fuse(fang_r_part)
 
 face_final = face_with_mouth.fuse(tongue_clean).fuse(fangs)
-head_combined = hood.fuse(face_final).fuse(perfect_soft_eyes)
+
+# お顔マスクの切り出し
+face_mask_cutter = Part.makeBox(40, 40, 40)
+face_mask_cutter.translate(App.Base.Vector(-44.5, -20, -20))
+
+# パーツ①：お顔マスク
+raw_mask = face_final.fuse(perfect_soft_eyes).common(face_mask_cutter)
+final_face_mask = raw_mask.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), 5.0)
+final_face_mask.translate(App.Base.Vector(-3.0, 0, 1.2))
+
+# 頭部フード部分
+hood_remains = hood.fuse(face_final.fuse(perfect_soft_eyes).cut(face_mask_cutter))
 
 # 触角
 stem_l = Part.makeCylinder(stem_r, stem_h)
@@ -103,14 +117,14 @@ antennas = antenna_l.fuse(antenna_r)
 antennas.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), 15.0)
 antennas.translate(App.Base.Vector(3.0, 0.0, head_r - 3.2))
 
-head_total = head_combined.fuse(antennas)
-head_total.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), 5.0)
-head_total.translate(App.Base.Vector(-3.0, 0, 1.2))
+hood_total = hood_remains.fuse(antennas)
+hood_total.rotate(App.Base.Vector(0,0,0), App.Base.Vector(0,1,0), 5.0)
+hood_total.translate(App.Base.Vector(-3.0, 0, 1.2))
 
 
-# --- 2. 猫背立ちフォルムの胴体と手足 ---
+# --- 2. 胴体と手足の作成 ---
 body = Part.makeSphere(body_r)
-body_pos = App.Base.Vector(3.2, 0, -11.0)
+body_pos = App.Base.Vector(3.6, 0, -11.0)
 body.translate(body_pos)
 body.rotate(body_pos, App.Base.Vector(0,1,0), -15.0)
 
@@ -137,18 +151,16 @@ def make_claws_for_limb(limb_pos, direction_vector):
 
 pos_arm_l = App.Base.Vector(0.0, 8.5, -10.5)
 pos_arm_r = App.Base.Vector(0.0, -9.5, -10.5)
+arm_l = Part.makeSphere(limb_r)
+arm_l.translate(pos_arm_l)
+arm_l = arm_l.fuse(make_claws_for_limb(pos_arm_l, App.Base.Vector(-1, 0.1, 0.2)))
 
-arm_l_sphere = Part.makeSphere(limb_r)
-arm_l_sphere.translate(pos_arm_l)
-arm_l = arm_l_sphere.fuse(make_claws_for_limb(pos_arm_l, App.Base.Vector(-1, 0.1, 0.2)))
+arm_r = Part.makeSphere(limb_r)
+arm_r.translate(pos_arm_r)
+arm_r = arm_r.fuse(make_claws_for_limb(pos_arm_r, App.Base.Vector(-1, -0.1, 0.2)))
 
-arm_r_sphere = Part.makeSphere(limb_r)
-arm_r_sphere.translate(pos_arm_r)
-arm_r = arm_r_sphere.fuse(make_claws_for_limb(pos_arm_r, App.Base.Vector(-1, -0.1, 0.2)))
-
-# 足の座標
-pos_leg_l = App.Base.Vector(-0.5, 5.8, -18.5)
-pos_leg_r = App.Base.Vector(-0.5, -5.8, -18.5)
+pos_leg_l = App.Base.Vector(-0.5, 5.8, -20.5)
+pos_leg_r = App.Base.Vector(-0.5, -5.8, -20.5)
 
 leg_l_sphere = Part.makeSphere(limb_r)
 leg_l_sphere.translate(pos_leg_l)
@@ -158,38 +170,36 @@ leg_r_sphere = Part.makeSphere(limb_r)
 leg_r_sphere.translate(pos_leg_r)
 leg_r = leg_r_sphere.fuse(make_claws_for_limb(pos_leg_r, App.Base.Vector(-1, -0.1, 0.0)))
 
-# 【削り処理なし】丸みを100%維持した完全な一体型モカピー本体
-final_mocapy = head_total.fuse(body).fuse(arm_l).fuse(arm_r).fuse(leg_l).fuse(leg_r)
+body_total = body.fuse(arm_l).fuse(arm_r).fuse(leg_l).fuse(leg_r)
 
 
-# --- 3. 📌【新規追加】足が丸いまま自立できる「専用ディスプレイスタンド（台座）」の生成 ---
-# 直径32mm、厚み3mmの真っ平らなベース形の円柱を作成
-stand_base = Part.makeCylinder(16.0, 3.0)
-# モカピーの足の真下の位置（Z=-25.0）にぴったり配置
-stand_base.translate(App.Base.Vector(1.0, 0, -25.0))
+# --- 3. 3分割 ＆ 足の裏だけピンポイント水平カット ---
+lower_body_box = Part.makeBox(100, 100, 50)
+lower_body_box.translate(App.Base.Vector(-50, -50, -61.0))
+lower_body_raw = body_total.common(lower_body_box)
 
-# モカピーの両足の形をそのまま使って、台座の天面に深さ1.5mmの「はめ込み用くぼみ」をくり抜く
-# 少しだけクリアランス（隙間0.15mm）を持たせて、印刷後にすんなりはまるようにカッターを大きくします
-leg_cutter_l = Part.makeSphere(limb_r + 0.15)
-leg_cutter_l.translate(pos_leg_l)
-leg_cutter_r = Part.makeSphere(limb_r + 0.15)
-leg_cutter_r.translate(pos_leg_r)
+# 足の裏（最下部）だけを水平カット
+foot_cutter = Part.makeBox(100, 100, 10)
+foot_cutter.translate(App.Base.Vector(-50, -50, -32.5))
+final_lower_body = lower_body_raw.cut(foot_cutter)
 
-# 台座にくぼみを掘る
-final_stand = stand_base.cut(leg_cutter_l).cut(leg_cutter_r)
-
-# スライサーで並べて印刷しやすいように、完成した台座を真横（Y軸プラス方向）へ35mmスライドさせて配置
-final_stand.translate(App.Base.Vector(0, 35.0, 0))
+# 胴体の上半分を抽出してフードと結合
+upper_body_raw = body_total.cut(lower_body_box)
+final_hood_and_back = hood_total.fuse(upper_body_raw)
 
 
 # --- 4. FreeCADの画面に出力 ---
-obj_mocapy = doc.addObject("Part::Feature", "Mocapy_Ghost_Body")
-obj_mocapy.Shape = final_mocapy
-obj_mocapy.ShapeColor = (0.9, 0.95, 1.0)
+obj_face = doc.addObject("Part::Feature", "GhostMocapy_FaceMask")
+obj_face.Shape = final_face_mask
+obj_face.ShapeColor = (0.95, 0.95, 1.0)
 
-obj_stand = doc.addObject("Part::Feature", "Mocapy_DisplayStand")
-obj_stand.Shape = final_stand
-obj_stand.ShapeColor = (0.7, 0.7, 0.7) # 台座はグレーで見やすく
+obj_hood = doc.addObject("Part::Feature", "GhostMocapy_HoodAndBack")
+obj_hood.Shape = final_hood_and_back
+obj_hood.ShapeColor = (0.85, 0.9, 0.95)
+
+obj_lower = doc.addObject("Part::Feature", "GhostMocapy_LowerBody")
+obj_lower.Shape = final_lower_body
+obj_lower.ShapeColor = (0.75, 0.8, 0.85)
 
 doc.recompute()
 
@@ -200,4 +210,4 @@ if App.GuiUp:
     except Exception:
         pass
 
-print("【大成功】本体の丸みを完全維持したまま、ぴったり自立できる専用スタンドを同時に出力しました！")
+print("【処理完了】FreeCADの画面上に3つのオブジェクトを生成しました。")

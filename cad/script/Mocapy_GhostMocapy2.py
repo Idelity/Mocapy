@@ -1,9 +1,10 @@
 import FreeCAD as App
 import Part
 import math
+import os
 
 # 新しいドキュメントを作成
-doc = App.newDocument("Mocapy_SplitGhostMocapy")
+doc = App.newDocument("Mocapy_SplitGhostMocapy_Fixed")
 
 # --- パラメータ設定 (単位: mm) ---
 head_r = 12.0       # 頭（頭巾）の半径
@@ -21,7 +22,7 @@ claw_base_r = 1.1
 claw_h = 1.5
 spread_angle = 25.0
 
-# 顔のパーツパラメータ（目の位置：中央寄り・上め）
+# 顔のパーツパラメータ
 eye_sphere_r = 2.6
 eye_thickness = 0.4
 
@@ -183,20 +184,16 @@ cutter.translate(App.Base.Vector(-30, -30, -31.4))
 final_mocapy = full_mocapy.cut(cutter)
 
 
-# --- 8. 📌【真ん中で前後モナカ分割】 ---
-# 左右対称の中心面（Y=0）を基準に分割用の巨大な箱を作成
-split_box_front = Part.makeBox(100, 50, 100)
-split_box_front.translate(App.Base.Vector(-50, 0, -50)) # Y=0からプラス側（左半身）を覆う箱...ではなく、今回は完全に「前後のY軸対称」で割るため、モカピーの正面(X軸マイナス)を考慮した前後分割を行います。
+# --- 8. 📌【バグ修正版・真ん中で前後モナカ分割】 ---
+# X=0の平面で綺麗に半分にするため、全体を完全に包み込む十分な大きさ（100x100x100）の箱を作成
+# X=0 からプラス方向（背中側全体）を完全に覆う位置（X: 0〜100）に正確に配置
+split_box_back = Part.makeBox(100, 100, 100)
+split_box_back.translate(App.Base.Vector(0, -50, -50))
 
-# モカピーはX軸のマイナス方向が「顔（正面）」、プラス方向が「背中（後ろ）」です。
-# したがって、X=0 の平面で真っ二つに「前後分割」するのが正しいモナカ割になります。
-split_box_back = Part.makeBox(60, 60, 60)
-split_box_back.translate(App.Base.Vector(0, -30, -40)) # X=0より後ろ（背中側）を覆う箱
-
-# 前半身（Front）：X=0より前（顔側）だけを残す（後ろをカット）
+# 前半身（Front）：全体データから背中側の箱を「引き算（cut）」して、顔側だけを残す
 mocapy_front = final_mocapy.cut(split_box_back)
 
-# 後半身（Back）：X=0より後ろ（背中側）だけを残す
+# 後半身（Back）：全体データと背中側の箱の「重なった部分（common）」だけを抽出して、背中側を残す
 mocapy_back = final_mocapy.common(split_box_back)
 
 
@@ -211,12 +208,20 @@ obj_back.ShapeColor = (0.8, 0.85, 0.9)
 
 doc.recompute()
 
+
+# --- 10. 📌【追加】デスクトップへの自動STLエクスポート ---
+try:
+    desktop_path = os.path.expanduser("~/Desktop")
+    Part.export([obj_front], os.path.join(desktop_path, "GhostMocapy_Front.stl"))
+    Part.export([obj_back], os.path.join(desktop_path, "GhostMocapy_Back.stl"))
+    print("【成功】デスクトップに 'GhostMocapy_Front.stl' と 'GhostMocapy_Back.stl' を自動保存しました！")
+except Exception as e:
+    print(f"STL自動出力でエラーが発生しました（手動エクスポートしてください）: {e}")
+
 if App.GuiUp:
     try:
         App.Gui.ActiveDocument.ActiveView.viewReady()
         App.Gui.SendMsgToActiveView("ViewFit")
     except Exception:
         pass
-
-print("出力しました！")
 
