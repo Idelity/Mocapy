@@ -141,6 +141,7 @@ Mocapy/
 - [ ] 6. ポトフを使ってみる https://potofu.me/mocapy
 - [ ] 7. Xで発信してみる https://x.com/mocapyworld
 - [ ] 8. スズリを使ってみる https://suzuri.jp/Mocapy
+- [ ] 9. LINEスタンプを作ってみる https://creator.line.me/ja/
 
 
 ## 利用規約 / License
