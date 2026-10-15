@@ -510,7 +510,7 @@
 
 👉 **[モカピーワールドのものがたり Part 3（episodes_part3.md）を開く](episodes_part3.md)**
 
-[← 前の物語（第11話〜第20話）へ戻る](episodes_part2.md) ｜ [グッズ（ショップ）を見る](https://suzuri.jp/Mocapy)
+[← 前の物語（第1話〜第10話）へ戻る](episodes.md) ｜ [グッズ（ショップ）を見る](https://suzuri.jp/Mocapy)
 
 
 ---
