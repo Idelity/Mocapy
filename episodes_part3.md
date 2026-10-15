@@ -1,7 +1,7 @@
 # Mocapy World / モカピーワールド
 ## 〜 カフェを飛び出して大冒険！ ちいさな仲間たちの、あたらしい毎日の始まり（Part 3） 〜
 
-[← 前の物語（第11話〜第20話）へ戻る](episodes.md) ｜ [グッズ（ショップ）を見る](https://suzuri.jp/Mocapy)
+[← 前の物語（第11話〜第20話）へ戻る](episodes_part2.md) ｜ [グッズ（ショップ）を見る](https://suzuri.jp/Mocapy)
 
 ---
 
